@@ -9,6 +9,5 @@ void main()
 {
 	gl_Position = projection*transform * vec4(aPos, 1.0);
     // color should actually be densitySource.x, densitySource.y, densitySource.z
-    vertexColor = vec4(0.5, 0.5, 0.5, 1.0f);
+    vertexColor = vec4(densitySource.x, densitySource.y, densitySource.z, 1.0f);
 }
-

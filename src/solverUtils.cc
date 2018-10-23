@@ -209,4 +209,3 @@ void velocityStep ( int N, float * u, float * v, float * u0, float * v0, float v
 		}
 	}   
 }
-
