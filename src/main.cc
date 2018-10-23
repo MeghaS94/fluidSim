@@ -31,9 +31,6 @@ float *u, *v, *u_prev, *v_prev;
 int WINDOW_SIZE_WIDTH = 600;
 int WINDOW_SIZE_HEIGHT = 600;
 
-// vertices for a grid
-float gridPoints[4*(N+2)*(N+2)];
-
 // grid size
 #define Size (N+2)*(N+2)
 
@@ -84,28 +81,11 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		glm::vec2 result;
 		result.x = valueRemapping(xpos, 0, WINDOW_SIZE_WIDTH, 0, N);
 		result.y = valueRemapping(ypos, 0, WINDOW_SIZE_HEIGHT, 0, N);
-		// std::cout << xpos/double(WINDOW_SIZE) << ", " << 1.0 -ypos/double(WINDOW_SIZE)  << std::endl;
-		std::cout << result.x << ", " << result.y << endl;
 		dens_prev[IX(int(result.x), int((N+2) - result.y))] = 20000.0;
 		
 		int max = 10.0 , min = -10.0;
 		// u_prev[IX(int(result.x), int((N+2) - result.y))] = (float(rand()%(max-min + 1) + min)/10.0f ) * 200.0f;
 		// v_prev[IX(int(result.x), int((N+2) - result.y))] = (float(rand()%(max-min + 1) + min)/10.0f) * 200.0f;
-		
-		std::cout << "density sources value at " << result.x << ", "<< (N+2) - result.y << " : " << dens_prev[IX(int(result.x), int((N+2) - result.y))] << endl;
-		// int index = 0;
-		// for (int i=0;i<N+2;i++)
-		// {
-		// 	for (int j=0;j<N+2;j++)
-		// 	{
-		// 		gridPoints[index] = float(i);///float(N);
-		// 		gridPoints[index+1] = float(j);///float(N);
-		// 		gridPoints[index+2] = 0.0;  
-		// 		gridPoints[index+3] += dens_prev[IX(i,j)]*20;
-		// 		// std::cout << gridPoints[index]<< std::endl;
-		// 		index = index + 4;
-		// 	}
-		// }
 	}
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
@@ -157,7 +137,6 @@ void addVelocitySource(std::vector<vec3f> cursor_pos, int mode)
 				double dy = y2 - y1;
 				u_prev[IX(gridX, gridY)] = dx*10.0f;
 				v_prev[IX(gridX, gridY)] = dy*10.0f; 
-				// std::cout << dx << ", " << dy << std::endl;
 			}
 	}
 }
@@ -226,10 +205,7 @@ void draw_density()
                 d01 = dens_prev[IX(i, j+1)];
                 d10 = dens_prev[IX(i+1, j)];
                 d11 = dens_prev[IX(i+1, j+1)];
-				// std::cout << d00 << ", " << d01 << ", " << d11 << ", " << d10 << std::endl;
-				// std::cout << "x, y | x, y+1 | x+1, y | x+1 , y+1 : " << 
-				// 			x<< "," << y << " | " << x << ","<< y+1 << " | " << x+1 << "," << y << " | " <<
-																							// x+1 << "," << y+1  << std::endl;
+
 				// v0
 				dens_quads[index] =   x;
 				dens_quads[index+1] =  y;
@@ -359,19 +335,6 @@ int main()
     // ------------------------------------------------------------------
 
 	allocate_data();
-
-	int index = 0;
-	for (int i=0;i<N+2;i++)
-	{
-		for (int j=0;j<N+2;j++)
-		{
-			gridPoints[index] = float(i);
-			gridPoints[index+1] = float(j);
-			gridPoints[index+2] = 0.0;  
-			gridPoints[index+3] = dens_prev[IX(i,j)];
-			index = index + 4;
-		}
-	}
 	
 	// vel grid
 	for (int i=0;i<Size;i++)
@@ -480,10 +443,10 @@ int main()
 		glBindVertexArray(vaos[0]);
 		// glPointSize(4.0f);
 		glLineWidth(1.0f);
-	    glDrawArrays(GL_LINES,  0, 2*Size);
+		glDrawArrays(GL_LINES,  0, 2*Size);
 		
 		glBindVertexArray(vaos[1]); 
-	    glDrawArrays(GL_TRIANGLES,  0, (N-1)*(N-1)*18);
+		glDrawArrays(GL_TRIANGLES,  0, (N-1)*(N-1)*18);
 		
 		// check and call events and swap buffers
 		glfwSwapBuffers(window);
